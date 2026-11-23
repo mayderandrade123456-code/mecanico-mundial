@@ -55,6 +55,19 @@ oninput="pesquisar()">
 
 <div class="card">
 <h2>Histórico de casos</h2>
+ <div class="card">
+  <h2>📚 Biblioteca Técnica</h2>
+  <p>Consulte conhecimentos técnicos de mecânica pesada.</p>
+
+  <input
+    id="buscaTecnica"
+    type="search"
+    placeholder="Pesquisar defeito, peça ou sistema..."
+    oninput="pesquisarTecnica()"
+  >
+
+  <div id="resultadosTecnicos"></div>
+ </div>
 <div id="historico"></div>
 </div>
 
@@ -120,6 +133,61 @@ function esc(v){
   </div>
  `).join("");
  }
+ const bibliotecaTecnica = [
+  {
+    titulo: "Caminhão puxando para um lado",
+    sistema: "Eixo e suspensão",
+    causas: [
+      "Feixe de molas deslocado ou danificado",
+      "Suporte do feixe de molas com folga ou quebrado",
+      "Pino de centro danificado ou fora de posição",
+      "Eixo desalinhado"
+    ],
+    teste: "Verifique o alinhamento do eixo, o pino de centro, os feixes de molas e os suportes."
+  },
+  {
+    titulo: "Motor com dificuldade para pegar",
+    sistema: "Motor diesel",
+    causas: [
+      "Bateria com carga baixa",
+      "Entrada de ar no combustível",
+      "Filtro de combustível obstruído",
+      "Problema no sistema de injeção"
+    ],
+    teste: "Verifique a tensão da bateria, a alimentação de combustível e a presença de ar no sistema."
+  }
+];
+
+function pesquisarTecnica() {
+  const termo = document.getElementById("buscaTecnica").value.toLowerCase().trim();
+  const area = document.getElementById("resultadosTecnicos");
+
+  if (!termo) {
+    area.innerHTML = "";
+    return;
+  }
+
+  const encontrados = bibliotecaTecnica.filter(item =>
+    [item.titulo, item.sistema, item.teste, ...item.causas]
+      .some(valor => valor.toLowerCase().includes(termo))
+  );
+
+  if (!encontrados.length) {
+    area.innerHTML = "<p>Nenhum conteúdo técnico encontrado.</p>";
+    return;
+  }
+
+  area.innerHTML = encontrados.map(item => `
+    <div class="registro">
+      <h3>${esc(item.titulo)}</h3>
+      <p><b>Sistema:</b> ${esc(item.sistema)}</p>
+      <p><b>Possíveis causas:</b></p>
+      <ul>${item.causas.map(causa => `<li>${esc(causa)}</li>`).join("")}</ul>
+      <p><b>Testes recomendados:</b> ${esc(item.teste)}</p>
+      <small>Hipóteses para investigação — não representam diagnóstico confirmado.</small>
+    </div>
+  `).join("");
+     }
 function salvar(){
  const c={
  veiculo:document.getElementById("veiculo").value.trim(),
