@@ -147,5 +147,14 @@ function salvar(){
 }
 mostrar();
 </script>
+ <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Aplicativo preparado"))
+      .catch(erro => console.error(erro));
+  });
+}
+ </script>
 </body>
 </html>
