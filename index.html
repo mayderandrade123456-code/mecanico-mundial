@@ -51,6 +51,32 @@ button{background:#eab308;color:#111;border:0;padding:13px 17px;border-radius:8p
   padding: 15px;
   margin: 12px;
    }
+  .peca-card {
+  background: #252525;
+  border: 1px solid #d4a017;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 15px 0;
+}
+
+.peca-imagem {
+  width: 100%;
+  max-width: 420px;
+  height: 230px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+  display: block;
+  margin: 10px auto;
+}
+
+.peca-card h3 {
+  color: #facc15;
+}
+
+.peca-card li {
+  margin-bottom: 8px;
+}
 </style>
  <link rel="manifest" href="./manifest.json">
 </head>
@@ -209,29 +235,34 @@ function esc(v){
    <small>${esc(c.data)}</small>
   </div>
  `).join("");
- }
- const bibliotecaTecnica = [
+  }
+  const bibliotecaTecnica = [
   {
-    titulo: "Caminhão puxando para um lado",
-    sistema: "Eixo e suspensão",
+    titulo: "Feixe de molas de caminhão",
+    sistema: "Eixos e suspensão",
+    imagem: "https://images.tcdn.com.br/img/img_prod/1149522/feixe_de_mola_dianteiro_atego_1518_2430_apatacao_9_folhas_2077_7_e468bc084301a22e1f21100cf7169bba.jpg",
+    funcao: "Sustentar parte do peso do caminhão, absorver impactos e ajudar a controlar a posição do eixo.",
+    tipos: [
+      "Feixe de molas convencional",
+      "Feixe de molas parabólico",
+      "Mola auxiliar ou de reforço"
+    ],
+    componentes: [
+      "Lâmina principal",
+      "Lâminas secundárias",
+      "Pino de centro",
+      "Abraçadeiras",
+      "Buchas e olhais"
+    ],
     causas: [
-      "Feixe de molas deslocado ou danificado",
-      "Suporte do feixe de molas com folga ou quebrado",
+      "Lâmina quebrada ou trincada",
+      "Feixe deslocado",
       "Pino de centro danificado ou fora de posição",
-      "Eixo desalinhado"
+      "Buchas ou suportes desgastados",
+      "Fixação do eixo com problema"
     ],
-    teste: "Verifique o alinhamento do eixo, o pino de centro, os feixes de molas e os suportes."
-  },
-  {
-    titulo: "Motor com dificuldade para pegar",
-    sistema: "Motor diesel",
-    causas: [
-      "Bateria com carga baixa",
-      "Entrada de ar no combustível",
-      "Filtro de combustível obstruído",
-      "Problema no sistema de injeção"
-    ],
-    teste: "Verifique a tensão da bateria, a alimentação de combustível e a presença de ar no sistema."
+    teste: "Com o caminhão imobilizado em local plano e seguro, faça inspeção visual dos dois lados. Compare a posição dos feixes, procure lâminas quebradas, deslocamentos, folgas e danos nas fixações. Não entre sob veículo sem apoio adequado.",
+    alerta: "Defeitos na suspensão podem comprometer o controle do caminhão. Não rode com componentes quebrados ou deslocados."
   }
 ];
 
@@ -253,18 +284,33 @@ function pesquisarTecnica() {
     area.innerHTML = "<p>Nenhum conteúdo técnico encontrado.</p>";
     return;
   }
+area.innerHTML = encontrados.map(item => `
+  <div class="peca-card">
+    <h3>${esc(item.titulo)}</h3>
 
-  area.innerHTML = encontrados.map(item => `
-    <div class="registro">
-      <h3>${esc(item.titulo)}</h3>
-      <p><b>Sistema:</b> ${esc(item.sistema)}</p>
-      <p><b>Possíveis causas:</b></p>
-      <ul>${item.causas.map(causa => `<li>${esc(causa)}</li>`).join("")}</ul>
-      <p><b>Testes recomendados:</b> ${esc(item.teste)}</p>
-      <small>Hipóteses para investigação — não representam diagnóstico confirmado.</small>
-    </div>
-  `).join("");
-     }
+    <img class="peca-imagem"
+      src="${esc(item.imagem)}"
+      alt="${esc(item.titulo)}">
+
+    <p><b>Sistema:</b> ${esc(item.sistema)}</p>
+    <p><b>Função:</b> ${esc(item.funcao)}</p>
+
+    <p><b>Tipos:</b></p>
+    <ul>${item.tipos.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+
+    <p><b>Componentes:</b></p>
+    <ul>${item.componentes.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+
+    <p><b>Possíveis causas:</b></p>
+    <ul>${item.causas.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+
+    <p><b>Testes recomendados:</b> ${esc(item.teste)}</p>
+    <p><b>Atenção:</b> ${esc(item.alerta)}</p>
+    <small>Informações técnicas para investigação. Confirme a aplicação no modelo do veículo.</small>
+  </div>
+`).join("");
+}
+     
 function salvar(){
  const c={
  veiculo:document.getElementById("veiculo").value.trim(),
