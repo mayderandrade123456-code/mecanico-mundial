@@ -1,1 +1,14 @@
 
+{
+  "name": "Mecânico Mundial",
+  "short_name": "Mecânico Mundial",
+  "description": "Assistente técnico de mecânica pesada, diagnósticos e soluções para caminhões.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101010",
+  "theme_color": "#101010"
+}
+
