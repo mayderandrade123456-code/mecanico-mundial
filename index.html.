@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>Mecânico Mundial</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif;padding:18px}
+header{border-bottom:2px solid #eab308;padding:12px 0 20px}
+h1{color:#facc15;margin:5px 0}
+small{color:#aaa}
+h2{color:#facc15;font-size:19px}
+.card{background:#202020;padding:16px;border-radius:12px;margin:16px 0}
+input,textarea{width:100%;padding:13px;margin:7px 0 14px;background:#303030;color:white;border:1px solid #555;border-radius:8px;font-size:16px}
+textarea{min-height:90px}
+button{background:#eab308;color:#111;border:0;padding:13px 17px;border-radius:8px;font-weight:bold;font-size:15px;margin:5px 3px 5px 0}
+.registro{border-top:1px solid #555;padding:12px 0}
+</style>
+</head>
+<body>
+<header>
+<h1>🔧 MECÂNICO MUNDIAL</h1>
+<small>Conhecimento que move o mundo.</small>
+</header>
+
+<div class="card">
+<h2>Novo diagnóstico</h2>
+<label>Caminhão / modelo</label>
+<input id="veiculo" placeholder="Ex.: Mercedes-Benz 1620">
+<label>Motor</label>
+<input id="motor" placeholder="Ex.: OM 366">
+<label>Defeito apresentado</label>
+<textarea id="defeito" placeholder="Descreva o que está acontecendo"></textarea>
+<label>Testes já realizados</label>
+<textarea id="testes" placeholder="O que já foi verificado?"></textarea>
+<label>Possível causa ou solução</label>
+<textarea id="solucao" placeholder="Hipótese ou solução encontrada"></textarea>
+<button onclick="salvar()">SALVAR CASO</button>
+<p id="status"></p>
+</div>
+
+<div class="card">
+<h2>Histórico de casos</h2>
+<div id="historico"></div>
+</div>
+
+<script>
+const CHAVE="mecanicoMundialCasosV1";
+
+function ler(){
+ try{return JSON.parse(localStorage.getItem(CHAVE)||"[]")}
+ catch(e){return []}
+}
+
+function mostrar(){
+ const lista=ler();
+ const area=document.getElementById("historico");
+ if(!lista.length){
+  area.innerHTML="<p>Nenhum caso cadastrado ainda.</p>";
+  return;
+ }
+ area.innerHTML=lista.map((c,i)=>`
+ <div class="registro">
+ <b>CASO ${i+1} — ${esc(c.veiculo)}</b>
+ <p><b>Motor:</b> ${esc(c.motor)}</p>
+ <p><b>Defeito:</b> ${esc(c.defeito)}</p>
+ <p><b>Testes:</b> ${esc(c.testes)}</p>
+ <p><b>Possível causa/solução:</b> ${esc(c.solucao)}</p>
+ <small>${esc(c.data)}</small>
+ </div>`).join("");
+}
+
+function esc(v){
+ return String(v||"").replace(/[&<>"']/g,s=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[s]);
+}
+
+function salvar(){
+ const c={
+ veiculo:document.getElementById("veiculo").value.trim(),
+ motor:document.getElementById("motor").value.trim(),
+ defeito:document.getElementById("defeito").value.trim(),
+ testes:document.getElementById("testes").value.trim(),
+ solucao:document.getElementById("solucao").value.trim(),
+ data:new Date().toLocaleString("pt-BR")
+ };
+ if(!c.veiculo||!c.defeito){
+  alert("Preencha o caminhão e o defeito.");
+  return;
+ }
+ try{
+  const lista=ler();
+  lista.push(c);
+  localStorage.setItem(CHAVE,JSON.stringify(lista));
+  if(ler().length!==lista.length)throw Error("Falha ao conferir gravação");
+  document.getElementById("status").textContent="✅ Caso salvo neste navegador!";
+  ["veiculo","motor","defeito","testes","solucao"].forEach(id=>document.getElementById(id).value="");
+  mostrar();
+ }catch(e){
+  document.getElementById("status").textContent="❌ Não foi possível salvar: "+e.message;
+ }
+}
+mostrar();
+</script>
+</body>
+</html>
