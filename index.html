@@ -24,6 +24,15 @@ button{background:#eab308;color:#111;border:0;padding:13px 17px;border-radius:8p
 <header>
 <h1>🔧 MECÂNICO MUNDIAL</h1>
 <small>Conhecimento que move o mundo.</small>
+
+ <div class="card">
+<h2>🔎 Pesquisar defeitos</h2>
+<input id="pesquisa" type="search"
+placeholder="Digite caminhão, motor ou defeito..."
+oninput="pesquisar()">
+<div id="resultados"></div>
+</div>
+</header>
 </header>
 
 <div class="card">
@@ -79,6 +88,36 @@ function esc(v){
  })[s]);
 }
 
+ function pesquisar(){
+ const termo=document.getElementById("pesquisa").value.trim().toLowerCase();
+ const area=document.getElementById("resultados");
+
+ if(!termo){
+  area.innerHTML="";
+  return;
+ }
+
+ const encontrados=ler().filter(c=>
+  [c.veiculo,c.motor,c.defeito,c.testes,c.solucao]
+  .some(v=>String(v||"").toLowerCase().includes(termo))
+ );
+
+ if(!encontrados.length){
+  area.innerHTML="<p>Nenhum caso encontrado. Tente outra palavra.</p>";
+  return;
+ }
+
+ area.innerHTML=encontrados.map(c=>`
+  <div class="registro">
+   <b>${esc(c.veiculo)}</b>
+   <p><b>Motor:</b> ${esc(c.motor)}</p>
+   <p><b>Defeito:</b> ${esc(c.defeito)}</p>
+   <p><b>Testes:</b> ${esc(c.testes)}</p>
+   <p><b>Possível causa/solução:</b> ${esc(c.solucao)}</p>
+   <small>${esc(c.data)}</small>
+  </div>
+ `).join("");
+ }
 function salvar(){
  const c={
  veiculo:document.getElementById("veiculo").value.trim(),
