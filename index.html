@@ -19,24 +19,70 @@ input,textarea{width:100%;padding:13px;margin:7px 0 14px;background:#303030;colo
 textarea{min-height:90px}
 button{background:#eab308;color:#111;border:0;padding:13px 17px;border-radius:8px;font-weight:bold;font-size:15px;margin:5px 3px 5px 0}
 .registro{border-top:1px solid #555;padding:12px 0}
+.menu-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background: #151515;
+  border-bottom: 2px solid #d4a017;
+}
+
+.menu-principal button {
+  background: #252525;
+  color: #ffd700;
+  border: 1px solid #d4a017;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.menu-principal button:active {
+  background: #d4a017;
+  color: #111;
+}
+
+.aba-conteudo {
+  background: #181818;
+  color: white;
+  border: 1px solid #d4a017;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 12px;
+   }
 </style>
  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
-<header>
+<nav class="menu-principal">
+  <button onclick="abrirAba('inicio')">🏠 Início</button>
+  <button onclick="abrirAba('aba-motor')">⚙️ Motor diesel</button>
+  <button onclick="abrirAba('freios')">🛑 Freios e válvulas</button>
+  <button onclick="abrirAba('cambio')">🔧 Câmbio e embreagem</button>
+  <button onclick="abrirAba('eixos')">🚛 Eixos e suspensão</button>
+  <button onclick="abrirAba('eletrica')">⚡ Elétrica</button>
+  <button onclick="abrirAba('hidraulica')">💧 Hidráulica</button>
+  <button onclick="abrirAba('injecao')">⛽ Injeção e combustível</button>
+  <button onclick="abrirAba('manuais')">📚 Manuais</button>
+ <button onclick="abrirAba('biblioteca')">📖 Biblioteca Técnica</button>
+</nav>
 <h1>🔧 MECÂNICO MUNDIAL</h1>
 <small>Conhecimento que move o mundo.</small>
 
- <div class="card">
-<h2>🔎 Pesquisar defeitos</h2>
-<input id="pesquisa" type="search"
-placeholder="Digite caminhão, motor ou defeito..."
-oninput="pesquisar()">
-<div id="resultados"></div>
-</div>
-</header>
 
+ <div id="inicio" class="aba-conteudo">
+  <h2>🏠 Painel principal</h2>
+  <p>Bem-vindo ao Mecânico Mundial.</p>
+  <p>Pesquise defeitos ou escolha uma categoria no menu.</p>
 <div class="card">
+  <h2>🔎 Pesquisar defeitos</h2>
+  <input id="pesquisa" type="search"
+    placeholder="Digite caminhão, motor ou defeito..."
+    oninput="pesquisar()">
+  <div id="resultados"></div>
+</div>
+  <div class="card">
 <h2>Novo diagnóstico</h2>
 <label>Caminhão / modelo</label>
 <input id="veiculo" placeholder="Ex.: Mercedes-Benz 1620">
@@ -50,22 +96,51 @@ oninput="pesquisar()">
 <textarea id="solucao" placeholder="Hipótese ou solução encontrada"></textarea>
 <button onclick="salvar()">SALVAR CASO</button>
 <p id="status"></p>
+  </div>
+ </div>
+
+<div id="aba-motor" class="aba-conteudo" style="display:none">
+  <h2>⚙️ Motor diesel</h2>
+  <div id="conteudo-motor"></div>
 </div>
 
-  
-<div class="card">
-  <h2>📚 Biblioteca Técnica</h2>
-  <p>Consulte conhecimentos técnicos de mecânica pesada.</p>
+<div id="freios" class="aba-conteudo" style="display:none">
+  <h2>🛑 Freios e válvulas</h2>
+  <div id="conteudo-freios"></div>
+</div>
 
-  <input
-    id="buscaTecnica"
-    type="search"
-    placeholder="Pesquisar defeito, peça ou sistema..."
-    oninput="pesquisarTecnica()"
-  >
+<div id="cambio" class="aba-conteudo" style="display:none">
+  <h2>🔧 Câmbio e embreagem</h2>
+</div>
 
+<div id="eixos" class="aba-conteudo" style="display:none">
+  <h2>🚛 Eixos e suspensão</h2>
+</div>
+
+<div id="eletrica" class="aba-conteudo" style="display:none">
+  <h2>⚡ Elétrica</h2>
+</div>
+
+<div id="hidraulica" class="aba-conteudo" style="display:none">
+  <h2>💧 Hidráulica</h2>
+</div>
+
+<div id="injecao" class="aba-conteudo" style="display:none">
+  <h2>⛽ Injeção e combustível</h2>
+</div>
+
+<div id="manuais" class="aba-conteudo" style="display:none">
+  <h2>📚 Manuais técnicos</h2>
+</div>
+ <div id="biblioteca" class="aba-conteudo" style="display:none">
+  <h2>📖 Biblioteca Técnica</h2>
+  <p>Pesquise peças, sistemas, defeitos, modelos e aplicações.</p>
+  <input id="buscaTecnica" type="search"
+    placeholder="Digite o nome da peça ou defeito..."
+    oninput="pesquisarTecnica()">
   <div id="resultadosTecnicos"></div>
-</div>
+ </div>
+
 
 <div class="card">
   <h2>Histórico de casos</h2>
@@ -216,6 +291,19 @@ function salvar(){
  }
 }
 mostrar();
+ function abrirAba(nome) {
+  const abas = document.querySelectorAll(".aba-conteudo");
+
+  abas.forEach(aba => {
+    aba.style.display = "none";
+  });
+
+  const selecionada = document.getElementById(nome);
+
+  if (selecionada) {
+    selecionada.style.display = "block";
+  }
+ }
 </script>
  <script>
 if ("serviceWorker" in navigator) {
