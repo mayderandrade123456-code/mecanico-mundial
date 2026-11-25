@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -96,7 +96,7 @@ h1{font-size:25px;line-height:1.15;margin:4px 0 8px}h2{font-size:19px;margin:0 0
  <div class="card"><h3>Estado do armazenamento</h3><p class="muted" id="estadoBanco"></p><div class="notice">Este banco usa armazenamento local do navegador. Para vários celulares compartilharem os mesmos dados, será necessário conectar um serviço de banco de dados e autenticação.</div></div>
 </section>
 
-<section class="screen" id="sobre"><div class="eyebrow">Cobertura</div><h1>Marcas e modelos</h1><div class="card"><h3>Mercedes-Benz</h3><p class="muted">Famílias e modelos para pesquisa: L1113, L1313, L1513, L1620, Accelo, Atego e Actros.</p></div><div class="card"><h3>Scania</h3><p class="muted">Famílias e modelos para pesquisa: Série 2, Série 3, 93, 94, 114, 124, P, G, R e S.</p></div><div class="card"><h3>DAF</h3><p class="muted">Famílias e modelos para pesquisa: CF e XF, incluindo diferentes gerações e motorizações.</p></div><div class="card"><h3>Volkswagen Caminhões</h3><p class="muted">Famílias e modelos para pesquisa: Worker, Delivery, Constellation e Meteor.</p></div><div class="notice">Os modelos acima são termos de pesquisa. Não significam que cada peça cadastrada seja compatível com todos eles.</div></section>
+a<section class="screen" id="sobre"><div class="eyebrow">Cobertura</div><h1>Marcas e modelos</h1><div class="card"><h3>Mercedes-Benz</h3><p class="muted">Famílias e modelos para pesquisa: L1113, L1313, L1513, L1620, Accelo, Atego e Actros.</p></div><div class="card"><h3>Scania</h3><p class="muted">Famílias e modelos para pesquisa: Série 2, Série 3, 93, 94, 114, 124, P, G, R e S.</p></div><div class="card"><h3>DAF</h3><p class="muted">Famílias e modelos para pesquisa: CF e XF, incluindo diferentes gerações e motorizações.</p></div><div class="card"><h3>Volkswagen Caminhões</h3><p class="muted">Famílias e modelos para pesquisa: Worker, Delivery, Constellation e Meteor.</p></div><div class="notice">Os modelos acima são termos de pesquisa. Não significam que cada peça cadastrada seja compatível com todos eles.</div></section>
 </main>
 </div>
 <div class="bottom"><nav>
@@ -104,10 +104,20 @@ h1{font-size:25px;line-height:1.15;margin:4px 0 8px}h2{font-size:19px;margin:0 0
 <button class="navbtn" data-page="pecas" onclick="abrir('pecas')"><b>⚙</b>Peças</button>
 <button class="navbtn" data-page="diagnostico" onclick="abrir('diagnostico')"><b>⌕</b>Diagnóstico</button>
 <button class="navbtn" data-page="sistemas" onclick="abrir('sistemas')"><b>▦</b>Sistemas</button>
-<button class="navbtn" data-page="manuais" onclick="abrir('manuais')"><b>▤</b>Manuais</button>
-</nav></div>
+<button class="nvbtn" data-page="manuais" onclick="abrir('manuais')"><b>▤</b>Manuais</button>
+</nav></div> 
+ 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://bqsivstephmugnepmflx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_fWHJMP79qYGhb852tEfsTQ_oHiioI5d';
 
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+ <script>
  const DBKEY='mecanicoMundialBancoV2', CASEKEY='mecanicoMundialCasosV1';
 const sistemas=['Motor','Freios e válvulas','Suspensão e molas','Transmissão e embreagem','Eixos e diferencial','Direção','Elétrica e eletrônica','Arrefecimento','Combustível e injeção','Admissão e escape','Cabine e carroceria','Hidráulico e implementos','Rodas e cubos','Lubrificação'];
 const modelos=['Mercedes-Benz L1113 L1313 L1513 L1620 Accelo Atego Actros','Scania Série 2 Série 3 93 94 114 124 P G R S','DAF CF XF','Volkswagen Worker Delivery Constellation Meteor'];
