@@ -3,364 +3,787 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101010">
-<title>Mecânico Mundial | Diagnóstico de Caminhões e Motores Diesel</title>
-<meta name="description" content="Mecânico Mundial: pesquisa de defeitos, diagnósticos, testes e soluções para caminhões, motores diesel e sistemas mecânicos.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090e17">
+<title>Mecânico Mundial | Plataforma Técnica Diesel</title>
+<meta name="description" content="Catálogo de peças, banco de dados técnico e diagnóstico de caminhões e motores diesel.">
+<link rel="manifest" href="./manifest.json">
+
 <style>
+:root {
+  --bg:#090e17; --panel:#111b29; --panel2:#172538;
+  --blue:#168cff; --blue2:#48b5ff; --text:#f4f7fb;
+  --muted:#91a2b7; --border:#293c52; --green:#23c483;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#101010;color:#fff;font-family:Arial,sans-serif;padding:18px}
-header{border-bottom:2px solid #eab308;padding:12px 0 20px}
-h1{color:#facc15;margin:5px 0}
-small{color:#aaa}
-h2{color:#facc15;font-size:19px}
-.card{background:#202020;padding:16px;border-radius:12px;margin:16px 0}
-input,textarea{width:100%;padding:13px;margin:7px 0 14px;background:#303030;color:white;border:1px solid #555;border-radius:8px;font-size:16px}
-textarea{min-height:90px}
-button{background:#eab308;color:#111;border:0;padding:13px 17px;border-radius:8px;font-weight:bold;font-size:15px;margin:5px 3px 5px 0}
-.registro{border-top:1px solid #555;padding:12px 0}
-.menu-principal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px;
-  background: #151515;
-  border-bottom: 2px solid #d4a017;
+body {
+  margin:0; padding:0 0 100px; background:var(--bg);
+  color:var(--text); font-family:Arial,Helvetica,sans-serif;
 }
-
-.menu-principal button {
-  background: #252525;
-  color: #ffd700;
-  border: 1px solid #d4a017;
-  border-radius: 8px;
-  padding: 12px;
-  font-weight: bold;
-  cursor: pointer;
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header {
+  padding:18px; background:linear-gradient(130deg,#142940,#090e17 80%);
+  border-bottom:1px solid var(--border);
 }
-
-.menu-principal button:active {
-  background: #d4a017;
-  color: #111;
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon {
+  width:48px;height:48px;border-radius:15px;display:grid;
+  place-items:center;background:linear-gradient(145deg,#168cff,#0755a0);
+  font-size:25px;
 }
-
-.aba-conteudo {
-  background: #181818;
-  color: white;
-  border: 1px solid #d4a017;
-  border-radius: 10px;
-  padding: 15px;
-  margin: 12px;
-   }
-  .peca-card {
-  background: #252525;
-  border: 1px solid #d4a017;
-  border-radius: 12px;
-  padding: 14px;
-  margin: 15px 0;
+.brand-name{font-size:19px;font-weight:900;letter-spacing:1px}
+.brand-sub{font-size:12px;color:var(--muted);margin-top:4px}
+main{max-width:1100px;margin:auto;padding:18px}
+.page{display:none}
+.page.active{display:block;animation:show .2s ease}
+@keyframes show{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-size:25px;margin:4px 0 8px}
+h2{font-size:19px;color:var(--blue2);margin-top:0}
+h3{font-size:16px}
+p{line-height:1.55}
+small,.muted{color:var(--muted)}
+.heading{margin:5px 0 20px}
+.heading p{font-size:14px;color:var(--muted);margin:0}
+.hero {
+  padding:24px;border:1px solid #24517c;border-radius:20px;
+  background:radial-gradient(circle at 90% 5%,#168cff38,transparent 38%),linear-gradient(135deg,#142c45,#101925);
+  margin-bottom:20px;
 }
-
-.peca-imagem {
-  width: 100%;
-  max-width: 420px;
-  height: 230px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 8px;
-  display: block;
-  margin: 10px auto;
+.hero-tag{font-size:11px;letter-spacing:1.5px;color:var(--blue2);font-weight:bold}
+.hero h1{font-size:27px;line-height:1.2;margin:12px 0}
+.hero p{font-size:14px;color:#c1cede}
+.panel,.card,.result,.part {
+  padding:16px;background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;margin:13px 0;
 }
-
-.peca-card h3 {
-  color: #facc15;
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tile {
+  text-align:left;min-height:112px;padding:15px;color:white;
+  background:linear-gradient(145deg,#192b40,#111a27);
+  border:1px solid var(--border);border-radius:15px;
 }
-
-.peca-card li {
-  margin-bottom: 8px;
+.tile:active{transform:scale(.98)}
+.tile-icon{display:block;font-size:25px;margin-bottom:11px}
+.tile strong{font-size:14px}
+.tile small{display:block;font-size:12px;margin-top:6px;line-height:1.4}
+.section-title{font-size:17px;margin:24px 0 12px}
+.search {
+  display:flex;gap:8px;padding:7px;margin-top:16px;
+  background:#091421;border:1px solid #34516e;border-radius:13px;
+}
+.search input {
+  flex:1;min-width:0;border:0;background:transparent;
+  color:white;padding:10px;outline:0;margin:0;
+}
+.search button{padding:0 15px}
+input,textarea,select {
+  width:100%;padding:13px;margin:6px 0 12px;color:white;
+  background:#0a1421;border:1px solid var(--border);
+  border-radius:10px;outline:0;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--blue)}
+textarea{min-height:90px;resize:vertical}
+label{display:block;font-size:13px;color:#c3d1e1;margin-top:9px}
+input[type=checkbox]{width:auto}
+button.primary,.primary {
+  border:0;border-radius:10px;background:var(--blue);
+  color:white;padding:13px 16px;font-weight:bold;
+}
+button.secondary {
+  border:1px solid #36516f;border-radius:10px;
+  background:#20344a;color:#dcecff;padding:12px 14px;
+}
+button.danger {
+  border:1px solid #793d49;background:#381c26;
+  color:#ffb6bd;border-radius:9px;padding:9px 12px;
+}
+.part img {
+  display:block;width:100%;max-width:430px;height:210px;
+  object-fit:contain;background:#fff;border-radius:10px;margin:12px auto;
+}
+.part ul{padding-left:20px}
+.part li{margin:7px 0;line-height:1.5}
+.notice {
+  padding:13px;background:#302817;border-left:3px solid #e7b34b;
+  color:#f5dda8;border-radius:8px;font-size:13px;line-height:1.5;margin:12px 0;
+}
+.good{color:var(--green)}
+.record{padding:14px 0;border-top:1px solid var(--border)}
+.empty{text-align:center;color:var(--muted);padding:22px 10px;line-height:1.6}
+.tag {
+  display:inline-block;padding:5px 8px;border-radius:7px;
+  background:#173657;color:#9ed5ff;font-size:11px;margin:3px;
+}
+.bottom-nav {
+  position:fixed;z-index:1000;bottom:0;left:0;right:0;
+  display:grid;grid-template-columns:repeat(5,1fr);
+  padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+  background:#101a28f5;border-top:1px solid #2b4059;
+  box-shadow:0 -8px 25px #0008;backdrop-filter:blur(14px);
+}
+.nav-btn {
+  border:0;background:transparent;color:#91a2b7;
+  border-radius:10px;padding:7px 2px;font-size:10px;font-weight:bold;
+}
+.nav-btn span{display:block;font-size:21px;margin-bottom:4px}
+.nav-btn.active{color:var(--blue2);background:#168cff19}
+@media(min-width:700px) {
+  main{padding:26px 30px}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hero{padding:32px}
+  .hero h1{font-size:34px}
+  .bottom-nav {
+    left:50%;right:auto;transform:translateX(-50%);
+    width:min(650px,100%);border:1px solid var(--border);
+    border-bottom:0;border-radius:18px 18px 0 0;
+  }
 }
 </style>
- <link rel="manifest" href="./manifest.json">
 </head>
+
 <body>
-<nav class="menu-principal">
-  <button onclick="abrirAba('inicio')">🏠 Início</button>
-  <button onclick="abrirAba('aba-motor')">⚙️ Motor diesel</button>
-  <button onclick="abrirAba('freios')">🛑 Freios e válvulas</button>
-  <button onclick="abrirAba('cambio')">🔧 Câmbio e embreagem</button>
-  <button onclick="abrirAba('eixos')">🚛 Eixos e suspensão</button>
-  <button onclick="abrirAba('eletrica')">⚡ Elétrica</button>
-  <button onclick="abrirAba('hidraulica')">💧 Hidráulica</button>
-  <button onclick="abrirAba('injecao')">⛽ Injeção e combustível</button>
-  <button onclick="abrirAba('manuais')">📚 Manuais</button>
- <button onclick="abrirAba('biblioteca')">📖 Biblioteca Técnica</button>
-</nav>
-<h1>🔧 MECÂNICO MUNDIAL</h1>
-<small>Conhecimento que move o mundo.</small>
 
-
- <div id="inicio" class="aba-conteudo">
-  <h2>🏠 Painel principal</h2>
-  <p>Bem-vindo ao Mecânico Mundial.</p>
-  <p>Pesquise defeitos ou escolha uma categoria no menu.</p>
-<div class="card">
-  <h2>🔎 Pesquisar defeitos</h2>
-  <input id="pesquisa" type="search"
-    placeholder="Digite caminhão, motor ou defeito..."
-    oninput="pesquisar()">
-  <div id="resultados"></div>
-</div>
-  <div class="card">
-<h2>Novo diagnóstico</h2>
-<label>Caminhão / modelo</label>
-<input id="veiculo" placeholder="Ex.: Mercedes-Benz 1620">
-<label>Motor</label>
-<input id="motor" placeholder="Ex.: OM 366">
-<label>Defeito apresentado</label>
-<textarea id="defeito" placeholder="Descreva o que está acontecendo"></textarea>
-<label>Testes já realizados</label>
-<textarea id="testes" placeholder="O que já foi verificado?"></textarea>
-<label>Possível causa ou solução</label>
-<textarea id="solucao" placeholder="Hipótese ou solução encontrada"></textarea>
-<button onclick="salvar()">SALVAR CASO</button>
-<p id="status"></p>
+<header>
+  <div class="brand">
+    <div class="brand-icon">🔧</div>
+    <div>
+      <div class="brand-name">MECÂNICO MUNDIAL</div>
+      <div class="brand-sub">Conhecimento que move o mundo.</div>
+    </div>
   </div>
- </div>
+</header>
 
-<div id="aba-motor" class="aba-conteudo" style="display:none">
-  <h2>⚙️ Motor diesel</h2>
-  <button onclick="abrirAba('inicio')">⬅ Voltar ao início</button>
-  <div id="conteudo-motor"></div>
-</div>
+<main>
 
-<div id="freios" class="aba-conteudo" style="display:none">
-  <h2>🛑 Freios e válvulas</h2>
-  <button onclick="abrirAba('inicio')">⬅ Voltar ao início</button>
-  <div id="conteudo-freios"></div>
-</div>
+<!-- TELA INICIAL -->
+<section id="inicio" class="page active">
+  <div class="hero">
+    <div class="hero-tag">PLATAFORMA DE MECÂNICA DIESEL</div>
+    <h1>Diagnóstico, peças e conhecimento técnico.</h1>
+    <p>Encontre componentes, consulte sistemas e organize diagnósticos de caminhões.</p>
+    <div class="search">
+      <input id="buscaGeral" placeholder="Ex.: 3ª mola do 1620" type="search"
+        onkeydown="if(event.key==='Enter')buscarGeral()">
+      <button onclick="buscarGeral()">Buscar</button>
+    </div>
+  </div>
+  <div id="resultadoGeral"></div>
 
-<div id="cambio" class="aba-conteudo" style="display:none">
-  <h2>🔧 Câmbio e embreagem</h2>
-</div>
+  <h2 class="section-title">Acesso rápido</h2>
+  <div class="grid">
+    <button class="tile" onclick="ir('pecas')"><span class="tile-icon">⚙️</span><strong>Catálogo de peças</strong><small>Componentes e aplicações</small></button>
+    <button class="tile" onclick="ir('diagnostico')"><span class="tile-icon">🩺</span><strong>Diagnóstico</strong><small>Defeitos, testes e soluções</small></button>
+    <button class="tile" onclick="ir('sistemas')"><span class="tile-icon">🚛</span><strong>Sistemas</strong><small>Consulte cada conjunto</small></button>
+    <button class="tile" onclick="ir('manuais')"><span class="tile-icon">📚</span><strong>Manuais técnicos</strong><small>Biblioteca de consulta</small></button>
+    <button class="tile" onclick="ir('banco')"><span class="tile-icon">🗄️</span><strong>Banco de dados</strong><small>Gerenciar e fazer cópias</small></button>
+  </div>
 
-<div id="eixos" class="aba-conteudo" style="display:none">
-  <h2>🚛 Eixos e suspensão</h2>
-</div>
+  <div class="panel">
+    <h2>Banco de dados técnico</h2>
+    <p class="muted">Cadastro estruturado de caminhões, motores, peças, códigos, medidas, fotografias e aplicações.</p>
+    <div id="resumoBanco"></div>
+  </div>
+</section>
 
-<div id="eletrica" class="aba-conteudo" style="display:none">
-  <h2>⚡ Elétrica</h2>
-</div>
+<!-- CATÁLOGO -->
+<section id="pecas" class="page">
+  <div class="heading">
+    <h1>Catálogo de peças</h1>
+    <p>Pesquise componentes ou cadastre novas informações técnicas.</p>
+  </div>
+  <div class="panel">
+    <h2>Pesquisar no catálogo</h2>
+    <input id="buscaPeca" type="search" placeholder="Nome, caminhão, código ou sistema..." oninput="pesquisarPecas()">
+    <div id="resultadoPecas"></div>
+  </div>
 
-<div id="hidraulica" class="aba-conteudo" style="display:none">
-  <h2>💧 Hidráulica</h2>
-</div>
+  <div class="panel">
+    <h2>Cadastrar peça no banco</h2>
+    <p class="muted">Cadastre dados confirmados. Os registros ficam salvos neste navegador.</p>
+    <label>Nome da peça</label><input id="pNome" placeholder="Ex.: Mola mestre">
+    <label>Marca do caminhão</label><input id="pMarca" placeholder="Ex.: Mercedes-Benz">
+    <label>Modelo do caminhão</label><input id="pModelo" placeholder="Ex.: 1620">
+    <label>Motor / configuração</label><input id="pMotor" placeholder="Se aplicável">
+    <label>Sistema</label>
+    <select id="pSistema">
+      <option>Motor</option><option>Freios</option><option>Câmbio</option>
+      <option>Suspensão</option><option>Elétrica</option><option>Hidráulica</option>
+      <option>Injeção</option><option>Outro</option>
+    </select>
+    <label>Posição / localização</label><input id="pPosicao" placeholder="Ex.: dianteira esquerda">
+    <label>Código original</label><input id="pCodigo" placeholder="Código confirmado">
+    <label>Código equivalente</label><input id="pEquivalente" placeholder="Código alternativo confirmado">
+    <label>Medidas e especificações</label><textarea id="pMedidas" placeholder="Dimensões, quantidade, material..."></textarea>
+    <label>Descrição e função</label><textarea id="pDescricao" placeholder="Informações técnicas da peça"></textarea>
+    <label>Palavras relacionadas</label><input id="pPalavras" placeholder="Ex.: lâmina, feixe, mola principal">
+    <label>Link da fotografia</label><input id="pImagem" type="url" placeholder="https://...">
+    <label>Fonte / referência da informação</label><input id="pFonte" placeholder="Catálogo, fabricante, medição própria...">
+    <label><input id="pConfirmada" type="checkbox"> Aplicação e dados conferidos</label>
+    <button class="primary" onclick="cadastrarPeca()">SALVAR PEÇA</button>
+    <p id="statusPeca" class="good"></p>
+  </div>
+</section>
 
-<div id="injecao" class="aba-conteudo" style="display:none">
-  <h2>⛽ Injeção e combustível</h2>
-</div>
+<!-- DIAGNÓSTICOS -->
+<section id="diagnostico" class="page">
+  <div class="heading">
+    <h1>Diagnóstico técnico</h1>
+    <p>Cadastre e consulte ocorrências de oficina.</p>
+  </div>
+  <div class="panel">
+    <h2>Novo diagnóstico</h2>
+    <label>Caminhão / modelo</label><input id="veiculo" placeholder="Ex.: Mercedes-Benz 1620">
+    <label>Motor</label><input id="motor" placeholder="Ex.: OM 366">
+    <label>Defeito apresentado</label><textarea id="defeito" placeholder="Descreva o sintoma"></textarea>
+    <label>Testes realizados</label><textarea id="testes" placeholder="Descreva os testes"></textarea>
+    <label>Possível causa ou solução</label><textarea id="solucao" placeholder="Hipótese ou solução encontrada"></textarea>
+    <button class="primary" onclick="salvarCaso()">SALVAR DIAGNÓSTICO</button>
+    <p id="statusCaso" class="good"></p>
+  </div>
+  <div class="panel">
+    <h2>Histórico de diagnósticos</h2>
+    <input id="buscaCaso" type="search" placeholder="Pesquisar caminhão ou defeito..." oninput="mostrarCasos()">
+    <div id="historico"></div>
+  </div>
+</section>
 
-<div id="manuais" class="aba-conteudo" style="display:none">
-  <h2>📚 Manuais técnicos</h2>
-</div>
- <div id="biblioteca" class="aba-conteudo" style="display:none">
-  <h2>📖 Biblioteca Técnica</h2>
-  <p>Pesquise peças, sistemas, defeitos, modelos e aplicações.</p>
-  <input id="buscaTecnica" type="search"
-    placeholder="Digite o nome da peça ou defeito..."
-    oninput="pesquisarTecnica()">
-  <div id="resultadosTecnicos"></div>
- </div>
+<!-- SISTEMAS -->
+<section id="sistemas" class="page">
+  <div class="heading">
+    <h1>Sistemas do caminhão</h1>
+    <p>Entre em cada conjunto para consultar as peças cadastradas.</p>
+  </div>
+  <div class="grid">
+    <button class="tile" onclick="abrirSistema('Motor')"><span class="tile-icon">⚙️</span><strong>Motor diesel</strong><small>Bloco, cabeçote e componentes</small></button>
+    <button class="tile" onclick="abrirSistema('Freios')"><span class="tile-icon">🛑</span><strong>Freios e válvulas</strong><small>Ar, cuícas e acionamento</small></button>
+    <button class="tile" onclick="abrirSistema('Câmbio')"><span class="tile-icon">🔩</span><strong>Câmbio e embreagem</strong><small>Transmissão e acionamento</small></button>
+    <button class="tile" onclick="abrirSistema('Suspensão')"><span class="tile-icon">🚛</span><strong>Eixos e suspensão</strong><small>Molas, buchas, pinos e eixos</small></button>
+    <button class="tile" onclick="abrirSistema('Elétrica')"><span class="tile-icon">⚡</span><strong>Elétrica</strong><small>Alternador, partida e sensores</small></button>
+    <button class="tile" onclick="abrirSistema('Hidráulica')"><span class="tile-icon">💧</span><strong>Hidráulica</strong><small>Bombas, comandos e cilindros</small></button>
+    <button class="tile" onclick="abrirSistema('Injeção')"><span class="tile-icon">⛽</span><strong>Injeção e combustível</strong><small>Bombas, bicos e alimentação</small></button>
+  </div>
+  <div id="detalheSistema"></div>
+</section>
 
+<!-- MANUAIS -->
+<section id="manuais" class="page">
+  <div class="heading">
+    <h1>Biblioteca técnica</h1>
+    <p>Central de referências, manuais e documentos técnicos.</p>
+  </div>
+  <div class="panel">
+    <h2>Pesquisar material</h2>
+    <input id="buscaManual" placeholder="Ex.: motor OM 366, freios..." oninput="pesquisarManuais()">
+    <div id="listaManuais"></div>
+  </div>
+  <div class="panel">
+    <h2>Cadastrar referência de manual</h2>
+    <label>Nome do material</label><input id="mNome" placeholder="Nome do manual ou documento">
+    <label>Marca / modelo</label><input id="mModelo" placeholder="Veículo ou motor relacionado">
+    <label>Descrição</label><textarea id="mDescricao" placeholder="Conteúdo ou assunto abordado"></textarea>
+    <label>Link autorizado do documento</label><input id="mLink" type="url" placeholder="https://...">
+    <button class="primary" onclick="cadastrarManual()">SALVAR REFERÊNCIA</button>
+    <p id="statusManual" class="good"></p>
+  </div>
+  <div class="notice">Utilize manuais e documentos que você tenha autorização para consultar e compartilhar. Cadastrar um link não significa que o documento foi verificado.</div>
+</section>
 
-<div class="card">
-  <h2>Histórico de casos</h2>
-  <div id="historico"></div>
-</div>
- 
+<!-- BANCO DE DADOS -->
+<section id="banco" class="page">
+  <div class="heading">
+    <h1>Banco de dados</h1>
+    <p>Gerencie os registros técnicos salvos neste dispositivo.</p>
+  </div>
+  <div class="panel">
+    <h2>Resumo do banco local</h2>
+    <div id="estatisticas"></div>
+    <hr>
+    <button class="primary" onclick="exportarBanco()">EXPORTAR CÓPIA JSON</button>
+    <label>Restaurar uma cópia JSON</label>
+    <input id="arquivoImportacao" type="file" accept=".json,application/json">
+    <button class="secondary" onclick="importarBanco()">IMPORTAR CÓPIA</button>
+    <p id="statusBanco" class="good"></p>
+  </div>
+  <div class="notice">Os dados ficam no armazenamento deste navegador. Limpar os dados do navegador pode apagá-los. Exporte cópias regularmente. Ainda não existe sincronização entre aparelhos.</div>
+</section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-page="inicio" onclick="ir('inicio')"><span>⌂</span>Início</button>
+  <button class="nav-btn" data-page="pecas" onclick="ir('pecas')"><span>⚙</span>Peças</button>
+  <button class="nav-btn" data-page="diagnostico" onclick="ir('diagnostico')"><span>🩺</span>Diagnóstico</button>
+  <button class="nav-btn" data-page="sistemas" onclick="ir('sistemas')"><span>🚛</span>Sistemas</button>
+  <button class="nav-btn" data-page="manuais" onclick="ir('manuais')"><span>▤</span>Manuais</button>
+</nav>
 
 <script>
-const CHAVE="mecanicoMundialCasosV1";
+"use strict";
 
-function ler(){
- try{return JSON.parse(localStorage.getItem(CHAVE)||"[]")}
- catch(e){return []}
+/* BANCO DE DADOS */
+
+const DB_KEY = "mecanicoMundialBancoV2";
+const CASE_KEY = "mecanicoMundialCasosV1";
+
+const bancoInicial = {
+  versao: 2,
+  pecas: [{
+    id:"peca-feixe-molas-ref",
+    nome:"Feixe de molas de caminhão",
+    marca:"",
+    modelo:"",
+    motor:"",
+    sistema:"Suspensão",
+    posicao:"Não especificada",
+    codigo:"",
+    equivalente:"",
+    medidas:"Medidas e aplicação dependem do modelo e configuração do veículo.",
+    descricao:"Conjunto de lâminas utilizado na suspensão para suportar carga e absorver impactos.",
+    palavras:"feixe mola molas lâmina laminas mola mestre suspensão suspensao",
+    imagem:"https://images.tcdn.com.br/img/img_prod/1149522/feixe_de_mola_dianteiro_atego_1518_2430_apatacao_9_folhas_2077_7_e468bc084301a22e1f21100cf7169bba.jpg",
+    fonte:"Referência visual inicial. Aplicação específica não confirmada.",
+    confirmada:false,
+    tipos:["Feixe convencional","Feixe parabólico","Mola auxiliar"],
+    componentes:["Lâmina principal","Lâminas secundárias","Pino de centro","Abraçadeiras","Buchas e olhais"],
+    teste:"Inspecione visualmente lâminas, fixações, deslocamentos e folgas, com o veículo devidamente imobilizado e apoiado.",
+    alerta:"Não utilize o veículo com componentes quebrados ou deslocados. Não entre sob veículo sem apoio adequado."
+  }],
+  manuais:[],
+  veiculos:[],
+  atualizado:new Date().toISOString()
+};
+
+function carregarBanco() {
+  try {
+    const salvo=JSON.parse(localStorage.getItem(DB_KEY));
+    if(salvo && Array.isArray(salvo.pecas)) {
+      return {
+        versao:2,
+        pecas:salvo.pecas,
+        manuais:Array.isArray(salvo.manuais)?salvo.manuais:[],
+        veiculos:Array.isArray(salvo.veiculos)?salvo.veiculos:[],
+        atualizado:salvo.atualizado||new Date().toISOString()
+      };
+    }
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(bancoInicial));
 }
 
-function mostrar(){
- const lista=ler();
- const area=document.getElementById("historico");
- if(!lista.length){
-  area.innerHTML="<p>Nenhum caso cadastrado ainda.</p>";
-  return;
- }
- area.innerHTML=lista.map((c,i)=>`
- <div class="registro">
- <b>CASO ${i+1} — ${esc(c.veiculo)}</b>
- <p><b>Motor:</b> ${esc(c.motor)}</p>
- <p><b>Defeito:</b> ${esc(c.defeito)}</p>
- <p><b>Testes:</b> ${esc(c.testes)}</p>
- <p><b>Possível causa/solução:</b> ${esc(c.solucao)}</p>
- <small>${esc(c.data)}</small>
- </div>`).join("");
-}
+let banco=carregarBanco();
 
-function esc(v){
- return String(v||"").replace(/[&<>"']/g,s=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[s]);
-}
-
- function pesquisar(){
- const termo=document.getElementById("pesquisa").value.trim().toLowerCase();
- const area=document.getElementById("resultados");
-
- if(!termo){
-  area.innerHTML="";
-  return;
- }
-
- const encontrados=ler().filter(c=>
-  [c.veiculo,c.motor,c.defeito,c.testes,c.solucao]
-  .some(v=>String(v||"").toLowerCase().includes(termo))
- );
-
- if(!encontrados.length){
-  area.innerHTML="<p>Nenhum caso encontrado. Tente outra palavra.</p>";
-  return;
- }
-
- area.innerHTML=encontrados.map(c=>`
-  <div class="registro">
-   <b>${esc(c.veiculo)}</b>
-   <p><b>Motor:</b> ${esc(c.motor)}</p>
-   <p><b>Defeito:</b> ${esc(c.defeito)}</p>
-   <p><b>Testes:</b> ${esc(c.testes)}</p>
-   <p><b>Possível causa/solução:</b> ${esc(c.solucao)}</p>
-   <small>${esc(c.data)}</small>
-  </div>
- `).join("");
+function gravarBanco() {
+  banco.atualizado=new Date().toISOString();
+  try {
+    localStorage.setItem(DB_KEY,JSON.stringify(banco));
+    atualizarResumo();
+    return true;
+  } catch(e) {
+    alert("Não foi possível salvar. O armazenamento do navegador pode estar cheio.");
+    return false;
   }
-  const bibliotecaTecnica = [
-  {
-    titulo: "Feixe de molas de caminhão",
-    sistema: "Eixos e suspensão",
-    imagem: "https://images.tcdn.com.br/img/img_prod/1149522/feixe_de_mola_dianteiro_atego_1518_2430_apatacao_9_folhas_2077_7_e468bc084301a22e1f21100cf7169bba.jpg",
-    funcao: "Sustentar parte do peso do caminhão, absorver impactos e ajudar a controlar a posição do eixo.",
-    tipos: [
-      "Feixe de molas convencional",
-      "Feixe de molas parabólico",
-      "Mola auxiliar ou de reforço"
-    ],
-    componentes: [
-      "Lâmina principal",
-      "Lâminas secundárias",
-      "Pino de centro",
-      "Abraçadeiras",
-      "Buchas e olhais"
-    ],
-    causas: [
-      "Lâmina quebrada ou trincada",
-      "Feixe deslocado",
-      "Pino de centro danificado ou fora de posição",
-      "Buchas ou suportes desgastados",
-      "Fixação do eixo com problema"
-    ],
-    teste: "Com o caminhão imobilizado em local plano e seguro, faça inspeção visual dos dois lados. Compare a posição dos feixes, procure lâminas quebradas, deslocamentos, folgas e danos nas fixações. Não entre sob veículo sem apoio adequado.",
-    alerta: "Defeitos na suspensão podem comprometer o controle do caminhão. Não rode com componentes quebrados ou deslocados."
-  }
-];
+}
 
-function pesquisarTecnica() {
-  const termo = document.getElementById("buscaTecnica").value.toLowerCase().trim();
-  const area = document.getElementById("resultadosTecnicos");
+function carregarCasos() {
+  try {
+    const dados=JSON.parse(localStorage.getItem(CASE_KEY)||"[]");
+    return Array.isArray(dados)?dados:[];
+  } catch(e) { return []; }
+}
 
-  if (!termo) {
-    area.innerHTML = "";
+function escapar(valor) {
+  return String(valor??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function normalizar(valor) {
+  return String(valor||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .replace(/[ªº]/g,"")
+    .trim();
+}
+
+function idNovo() {
+  return "mm-"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+}
+
+function mensagem(id,texto) {
+  const el=document.getElementById(id);
+  if(el) el.textContent=texto;
+}
+
+function urlImagem(url) {
+  try {
+    const u=new URL(url);
+    return ["https:","http:"].includes(u.protocol)?u.href:"";
+  } catch(e) { return ""; }
+}
+
+function urlWeb(url) {
+  try {
+    const u=new URL(url);
+    return ["https:","http:"].includes(u.protocol)?u.href:"";
+  } catch(e) { return ""; }
+}
+
+/* NAVEGAÇÃO */
+
+function ir(nome) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const pagina=document.getElementById(nome);
+  if(!pagina) return;
+  pagina.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===nome);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function abrirSistema(sistema) {
+  ir("sistemas");
+  const area=document.getElementById("detalheSistema");
+  const itens=banco.pecas.filter(p=>normalizar(p.sistema)===normalizar(sistema));
+  area.innerHTML=`
+    <div class="panel">
+      <h2>${escapar(sistema)}</h2>
+      <p class="muted">Peças cadastradas neste sistema.</p>
+      ${itens.length?itens.map(cartaoPeca).join(""):'<div class="empty">Ainda não existem peças cadastradas neste sistema.</div>'}
+      <button class="secondary" onclick="ir('pecas')">Abrir catálogo completo</button>
+    </div>`;
+}
+
+/* CARTÕES DE PEÇAS */
+
+function cartaoPeca(p) {
+  const imagem=urlImagem(p.imagem);
+  return `
+  <article class="part">
+    <h3>${escapar(p.nome)}</h3>
+    ${imagem?`<img src="${escapar(imagem)}" alt="${escapar(p.nome)}" loading="lazy">`:""}
+    <p><b>Marca:</b> ${escapar(p.marca||"Não informada")}</p>
+    <p><b>Modelo:</b> ${escapar(p.modelo||"Não informado")}</p>
+    <p><b>Motor:</b> ${escapar(p.motor||"Não informado")}</p>
+    <p><b>Sistema:</b> ${escapar(p.sistema)}</p>
+    <p><b>Posição:</b> ${escapar(p.posicao||"Não informada")}</p>
+    <p><b>Código original:</b> ${escapar(p.codigo||"Não cadastrado")}</p>
+    <p><b>Equivalente:</b> ${escapar(p.equivalente||"Não cadastrado")}</p>
+    <p><b>Medidas:</b> ${escapar(p.medidas||"Não cadastradas")}</p>
+    <p><b>Descrição:</b> ${escapar(p.descricao||"Não cadastrada")}</p>
+    <p><b>Fonte:</b> ${escapar(p.fonte||"Não informada")}</p>
+    <span class="tag">${p.confirmada?"Aplicação conferida":"Aplicação não confirmada"}</span>
+    <p class="muted">O cadastro não garante compatibilidade sem confirmação da configuração exata.</p>
+    ${p.id!=="peca-feixe-molas-ref"?`<button class="danger" onclick="excluirPeca('${escapar(p.id)}')">Excluir cadastro</button>`:""}
+  </article>`;
+}
+
+/* CADASTRO E PESQUISA DE PEÇAS */
+
+function cadastrarPeca() {
+  const nome=document.getElementById("pNome").value.trim();
+  if(!nome) {
+    mensagem("statusPeca","Informe o nome da peça.");
     return;
   }
 
-  const encontrados = bibliotecaTecnica.filter(item =>
-    [item.titulo, item.sistema, item.teste, ...item.causas]
-      .some(valor => valor.toLowerCase().includes(termo))
+  const p={
+    id:idNovo(),
+    nome,
+    marca:document.getElementById("pMarca").value.trim(),
+    modelo:document.getElementById("pModelo").value.trim(),
+    motor:document.getElementById("pMotor").value.trim(),
+    sistema:document.getElementById("pSistema").value,
+    posicao:document.getElementById("pPosicao").value.trim(),
+    codigo:document.getElementById("pCodigo").value.trim(),
+    equivalente:document.getElementById("pEquivalente").value.trim(),
+    medidas:document.getElementById("pMedidas").value.trim(),
+    descricao:document.getElementById("pDescricao").value.trim(),
+    palavras:document.getElementById("pPalavras").value.trim(),
+    imagem:urlImagem(document.getElementById("pImagem").value.trim()),
+    fonte:document.getElementById("pFonte").value.trim(),
+    confirmada:document.getElementById("pConfirmada").checked
+  };
+
+  banco.pecas.push(p);
+  if(!gravarBanco()) {
+    banco.pecas.pop();
+    return;
+  }
+
+  document.querySelectorAll("#pecas .panel:nth-of-type(2) input, #pecas .panel:nth-of-type(2) textarea").forEach(el=>{
+    if(el.type==="checkbox") el.checked=false;
+    else el.value="";
+  });
+  mensagem("statusPeca","Peça cadastrada com sucesso!");
+  pesquisarPecas();
+}
+
+function excluirPeca(id) {
+  if(!confirm("Deseja realmente excluir este cadastro?")) return;
+  banco.pecas=banco.pecas.filter(p=>p.id!==id);
+  gravarBanco();
+  pesquisarPecas();
+  abrirSistema("Suspensão");
+}
+
+function corresponde(texto,termo) {
+  const t=normalizar(texto);
+  const palavras=normalizar(termo).split(/\s+/).filter(Boolean);
+  return palavras.every(p=>t.includes(p));
+}
+
+function pesquisarPecas() {
+  const termo=document.getElementById("buscaPeca").value.trim();
+  const area=document.getElementById("resultadoPecas");
+  if(!termo) {
+    area.innerHTML="";
+    return;
+  }
+  const encontrados=banco.pecas.filter(p=>
+    corresponde([
+      p.nome,p.marca,p.modelo,p.motor,p.sistema,p.posicao,
+      p.codigo,p.equivalente,p.medidas,p.descricao,p.palavras
+    ].join(" "),termo)
+  );
+  area.innerHTML=encontrados.length
+    ?encontrados.map(cartaoPeca).join("")
+    :'<div class="empty">Nenhuma peça encontrada. Experimente outro termo ou cadastre a peça.</div>';
+}
+
+/* PESQUISA GERAL */
+
+function buscarGeral() {
+  const termo=document.getElementById("buscaGeral").value.trim();
+  const area=document.getElementById("resultadoGeral");
+  if(!termo) {
+    area.innerHTML="";
+    return;
+  }
+
+  const pecas=banco.pecas.filter(p=>
+    corresponde([p.nome,p.marca,p.modelo,p.motor,p.sistema,p.posicao,p.codigo,p.equivalente,p.palavras,p.descricao].join(" "),termo)
   );
 
-  if (!encontrados.length) {
-    area.innerHTML = "<p>Nenhum conteúdo técnico encontrado.</p>";
+  const casos=carregarCasos().filter(c=>
+    corresponde([c.veiculo,c.motor,c.defeito,c.testes,c.solucao].join(" "),termo)
+  );
+
+  area.innerHTML=`
+    <div class="panel">
+      <h2>Resultados da pesquisa</h2>
+      <h3>Peças (${pecas.length})</h3>
+      ${pecas.length?pecas.map(cartaoPeca).join(""):'<p class="muted">Nenhuma peça encontrada.</p>'}
+      <h3>Diagnósticos registrados (${casos.length})</h3>
+      ${casos.length?casos.map(cartaoCaso).join(""):'<p class="muted">Nenhum diagnóstico encontrado.</p>'}
+    </div>`;
+}
+
+/* DIAGNÓSTICOS */
+
+function salvarCaso() {
+  const c={
+    veiculo:document.getElementById("veiculo").value.trim(),
+    motor:document.getElementById("motor").value.trim(),
+    defeito:document.getElementById("defeito").value.trim(),
+    testes:document.getElementById("testes").value.trim(),
+    solucao:document.getElementById("solucao").value.trim(),
+    data:new Date().toLocaleString("pt-BR")
+  };
+
+  if(!c.veiculo||!c.defeito) {
+    mensagem("statusCaso","Preencha o caminhão e o defeito.");
     return;
   }
-area.innerHTML = encontrados.map(item => `
-  <div class="peca-card">
-    <h3>${esc(item.titulo)}</h3>
 
-    <img class="peca-imagem"
-      src="${esc(item.imagem)}"
-      alt="${esc(item.titulo)}">
-
-    <p><b>Sistema:</b> ${esc(item.sistema)}</p>
-    <p><b>Função:</b> ${esc(item.funcao)}</p>
-
-    <p><b>Tipos:</b></p>
-    <ul>${item.tipos.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
-
-    <p><b>Componentes:</b></p>
-    <ul>${item.componentes.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
-
-    <p><b>Possíveis causas:</b></p>
-    <ul>${item.causas.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
-
-    <p><b>Testes recomendados:</b> ${esc(item.teste)}</p>
-    <p><b>Atenção:</b> ${esc(item.alerta)}</p>
-    <small>Informações técnicas para investigação. Confirme a aplicação no modelo do veículo.</small>
-  </div>
-`).join("");
-}
-     
-function salvar(){
- const c={
- veiculo:document.getElementById("veiculo").value.trim(),
- motor:document.getElementById("motor").value.trim(),
- defeito:document.getElementById("defeito").value.trim(),
- testes:document.getElementById("testes").value.trim(),
- solucao:document.getElementById("solucao").value.trim(),
- data:new Date().toLocaleString("pt-BR")
- };
- if(!c.veiculo||!c.defeito){
-  alert("Preencha o caminhão e o defeito.");
-  return;
- }
- try{
-  const lista=ler();
+  const lista=carregarCasos();
   lista.push(c);
-  localStorage.setItem(CHAVE,JSON.stringify(lista));
-  if(ler().length!==lista.length)throw Error("Falha ao conferir gravação");
-  document.getElementById("status").textContent="✅ Caso salvo neste navegador!";
-  ["veiculo","motor","defeito","testes","solucao"].forEach(id=>document.getElementById(id).value="");
-  mostrar();
- }catch(e){
-  document.getElementById("status").textContent="❌ Não foi possível salvar: "+e.message;
- }
-}
-mostrar();
- function abrirAba(nome) {
-  const abas = document.querySelectorAll(".aba-conteudo");
-
-  abas.forEach(aba => {
-    aba.style.display = "none";
-  });
-
-  const selecionada = document.getElementById(nome);
-
-  if (selecionada) {
-    selecionada.style.display = "block";
+  try {
+    localStorage.setItem(CASE_KEY,JSON.stringify(lista));
+  } catch(e) {
+    mensagem("statusCaso","Não foi possível salvar. Verifique o armazenamento.");
+    return;
   }
- }
-</script>
- <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+
+  ["veiculo","motor","defeito","testes","solucao"].forEach(id=>{
+    document.getElementById(id).value="";
+  });
+  mensagem("statusCaso","Diagnóstico salvo neste navegador!");
+  mostrarCasos();
+}
+
+function cartaoCaso(c) {
+  return `<div class="record">
+    <b>${escapar(c.veiculo)}</b>
+    <p><b>Motor:</b> ${escapar(c.motor)}</p>
+    <p><b>Defeito:</b> ${escapar(c.defeito)}</p>
+    <p><b>Testes:</b> ${escapar(c.testes)}</p>
+    <p><b>Possível causa/solução:</b> ${escapar(c.solucao)}</p>
+    <small>${escapar(c.data)}</small>
+  </div>`;
+}
+
+function mostrarCasos() {
+  const termo=document.getElementById("buscaCaso").value.trim();
+  const lista=carregarCasos().filter(c=>
+    !termo||corresponde([c.veiculo,c.motor,c.defeito,c.testes,c.solucao].join(" "),termo)
+  );
+  document.getElementById("historico").innerHTML=lista.length
+    ?lista.slice().reverse().map(cartaoCaso).join("")
+    :'<div class="empty">Nenhum diagnóstico encontrado.</div>';
+}
+
+/* MANUAIS */
+
+function cadastrarManual() {
+  const nome=document.getElementById("mNome").value.trim();
+  if(!nome) {
+    mensagem("statusManual","Informe o nome do material.");
+    return;
+  }
+  const manual={
+    id:idNovo(),
+    nome,
+    modelo:document.getElementById("mModelo").value.trim(),
+    descricao:document.getElementById("mDescricao").value.trim(),
+    link:urlWeb(document.getElementById("mLink").value.trim())
+  };
+  banco.manuais.push(manual);
+  if(!gravarBanco()) {
+    banco.manuais.pop();
+    return;
+  }
+  ["mNome","mModelo","mDescricao","mLink"].forEach(id=>{
+    document.getElementById(id).value="";
+  });
+  mensagem("statusManual","Referência cadastrada!");
+  pesquisarManuais();
+}
+
+function pesquisarManuais() {
+  const termo=document.getElementById("buscaManual").value.trim();
+  const lista=banco.manuais.filter(m=>
+    !termo||corresponde([m.nome,m.modelo,m.descricao].join(" "),termo)
+  );
+  document.getElementById("listaManuais").innerHTML=lista.length
+    ?lista.map(m=>`
+      <div class="result">
+        <h3>${escapar(m.nome)}</h3>
+        <p><b>Marca / modelo:</b> ${escapar(m.modelo)}</p>
+        <p>${escapar(m.descricao)}</p>
+        ${m.link?`<a href="${escapar(m.link)}" target="_blank" rel="noopener">Abrir referência</a>`:"<small>Sem link cadastrado</small>"}
+      </div>`).join("")
+    :'<div class="empty">Nenhuma referência cadastrada.</div>';
+}
+
+/* RESUMO DO BANCO */
+
+function atualizarResumo() {
+  const totalPecas=banco.pecas.length;
+  const totalManuais=banco.manuais.length;
+  const totalCasos=carregarCasos().length;
+
+  const html=`
+    <p><b>${totalPecas}</b> registros de peças</p>
+    <p><b>${totalManuais}</b> referências de manuais</p>
+    <p><b>${totalCasos}</b> diagnósticos salvos</p>`;
+  const resumo=document.getElementById("resumoBanco");
+  const estatisticas=document.getElementById("estatisticas");
+  if(resumo) resumo.innerHTML=html;
+  if(estatisticas) estatisticas.innerHTML=html;
+}
+
+/* EXPORTAR E IMPORTAR */
+
+function exportarBanco() {
+  const pacote={
+    produto:"Mecanico Mundial",
+    versao:2,
+    exportadoEm:new Date().toISOString(),
+    banco:banco,
+    diagnosticos:carregarCasos()
+  };
+  const arquivo=new Blob([JSON.stringify(pacote,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(arquivo);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="mecanico-mundial-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  mensagem("statusBanco","Cópia preparada para salvar.");
+}
+
+function importarBanco() {
+  const arquivo=document.getElementById("arquivoImportacao").files[0];
+  if(!arquivo) {
+    mensagem("statusBanco","Escolha um arquivo JSON primeiro.");
+    return;
+  }
+
+  const leitor=new FileReader();
+  leitor.onload=()=>{
+    try {
+      const dados=JSON.parse(leitor.result);
+      const novo=dados.banco||dados;
+
+      if(!novo||!Array.isArray(novo.pecas)||!Array.isArray(novo.manuais)) {
+        throw new Error("Estrutura de banco inválida.");
+      }
+
+      if(!confirm("A importação substituirá os registros atuais de peças e manuais. Deseja continuar?")) return;
+
+      const antigo=banco;
+      banco={
+        versao:2,
+        pecas:novo.pecas,
+        manuais:novo.manuais,
+        veiculos:Array.isArray(novo.veiculos)?novo.veiculos:[],
+        atualizado:new Date().toISOString()
+      };
+
+      if(!gravarBanco()) {
+        banco=antigo;
+        return;
+      }
+
+      if(Array.isArray(dados.diagnosticos)) {
+        localStorage.setItem(CASE_KEY,JSON.stringify(dados.diagnosticos));
+      }
+
+      mostrarCasos();
+      mensagem("statusBanco","Banco importado com sucesso!");
+    } catch(e) {
+      mensagem("statusBanco","Erro na importação: "+e.message);
+    }
+  };
+  leitor.readAsText(arquivo);
+}
+
+/* INICIALIZAÇÃO */
+
+function iniciar() {
+  gravarBanco();
+  mostrarCasos();
+  pesquisarManuais();
+  atualizarResumo();
+
+  // Preserva o histórico de diagnósticos da versão anterior.
+  // A chave antiga continua sendo utilizada.
+}
+
+iniciar();
+
+if("serviceWorker" in navigator) {
+  window.addEventListener("load",()=>{
     navigator.serviceWorker.register("./service-worker.js")
-      .then(() => console.log("Aplicativo preparado"))
-      .catch(erro => console.error(erro));
+      .then(()=>console.log("Mecânico Mundial preparado"))
+      .catch(erro=>console.error("Service Worker:",erro));
   });
 }
- </script>
+</script>
+
 </body>
 </html>
