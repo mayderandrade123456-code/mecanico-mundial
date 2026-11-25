@@ -432,7 +432,7 @@ if(!db.catalogoVisual)db.catalogoVisual={};db.versao=4;gravar();
 renderDiag=function(){let q=norm(document.getElementById('qDiag')?.value||'');let arr=termosDiag.filter(d=>!q||norm(d.t+' '+d.k+' '+d.c+' '+d.x).includes(q));document.getElementById('listaDiag').innerHTML=arr.map(d=>`<article class="diagCard"><h3>${esc(d.t)}</h3><div class="diagBubble cause"><strong>⚠️ CAUSAS POSSÍVEIS</strong><p>${esc(d.c)}</p></div><div class="diagBubble test"><strong>🔎 TESTES RECOMENDADOS</strong><p>${esc(d.x)}</p></div><div class="notice">As causas são hipóteses. Faça os testes e siga os procedimentos de segurança do fabricante.</div></article>`).join('')||'<div class="empty">Não encontrei uma referência inicial para esse sintoma. Registre o caso e consulte a documentação técnica do veículo.</div>'};
 renderDiag();
 
- // ===== SINCRONIZAÇÃO COM A NUVEM =====
+// ===== SINCRONIZAÇÃO COM A NUVEM =====
 
 let mmNuvemTimer = null;
 let mmSalvamentoEmAndamento = false;
@@ -463,8 +463,7 @@ async function mmCarregarDadosNuvem() {
     if (Array.isArray(data.data.casos)) {
       casos = data.data.casos;
       localStorage.setItem(CASEKEY, JSON.stringify(casos));
-     mmAgendarSalvamentoNuvem();
-   
+    }
 
     renderPecas();
     renderSistemas();
@@ -528,6 +527,7 @@ async function mmSalvarDadosNuvem() {
 }
 
 // ===== FIM DA SINCRONIZAÇÃO =====
+
 
 </script>
 </body>
