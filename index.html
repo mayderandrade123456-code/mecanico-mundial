@@ -32,6 +32,18 @@ h1{font-size:25px;line-height:1.15;margin:4px 0 8px}h2{font-size:19px;margin:0 0
 <body>
 <div class="app">
 <header class="top" id="topbar"><button class="back" onclick="voltar()">← Voltar</button><div class="brand">🔧 MECÂNICO MUNDIAL <small id="subtitulo">Central técnica para caminhões e motores diesel</small></div></header>
+ <section id="loginBox" style="padding:15px;background:#111e31;border-bottom:1px solid #263952">
+  <div id="loginStatus" style="margin-bottom:10px;color:#9aabc2">
+    Entre na sua conta do Mecânico Mundial
+  </div>
+  <input id="loginEmail" class="field" type="email" placeholder="Seu e-mail">
+  <input id="loginSenha" class="field" type="password" placeholder="Sua senha" style="margin-top:8px">
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn" onclick="entrarConta()">Entrar</button>
+    <button class="btn secondary" onclick="criarConta()">Criar conta</button>
+    <button class="btn secondary" onclick="sairConta()">Sair</button>
+  </div>
+</section>
 <main class="content">
 <section class="screen active" id="inicio">
  <div class="hero"><div class="eyebrow">Oficina inteligente</div><h1>Diagnóstico, peças e conhecimento técnico.</h1><p>Pesquise componentes, registre defeitos e consulte referências técnicas em um só lugar.</p></div>
@@ -108,7 +120,7 @@ a<section class="screen" id="sobre"><div class="eyebrow">Cobertura</div><h1>Marc
 </nav></div> 
  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
+
 const SUPABASE_URL = 'https://bqsivstephmugnepmflx.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_fWHJMP79qYGhb852tEfsTQ_oHiioI5d';
 
@@ -117,7 +129,148 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 </script>
+ 
  <script>
+  // ===== AUTENTICAÇÃO MECÂNICO MUNDIAL =====
+
+window.mmUsuario = null;
+window.mmAdmin = false;
+
+function mmMensagemLogin(mensagem, erro = false) {
+  const status = document.getElementById('loginStatus');
+  if (status) {
+    status.textContent = mensagem;
+    status.style.color = erro ? '#ff7777' : '#9aabc2';
+  }
+}
+
+async function entrarConta() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+
+  if (!email || !senha) {
+    mmMensagemLogin('Informe seu e-mail e sua senha.', true);
+    return;
+  }
+
+  mmMensagemLogin('Entrando na sua conta...');
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password: senha
+  });
+
+  if (error) {
+    mmMensagemLogin('Erro ao entrar: ' + error.message, true);
+    return;
+  }
+
+  await mmAtualizarSessao(data.session);
+}
+
+async function criarConta() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+
+  if (!email || !senha) {
+    mmMensagemLogin('Informe seu e-mail e crie uma senha.', true);
+    return;
+  }
+
+  if (senha.length < 6) {
+    mmMensagemLogin('A senha precisa ter pelo menos 6 caracteres.', true);
+    return;
+  }
+
+  mmMensagemLogin('Criando sua conta...');
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password: senha
+  });
+
+  if (error) {
+    mmMensagemLogin('Erro ao criar conta: ' + error.message, true);
+    return;
+  }
+
+  if (data.session) {
+    await mmAtualizarSessao(data.session);
+  } else {
+    mmMensagemLogin('Conta criada! Confira seu e-mail para confirmar o cadastro.');
+  }
+}
+
+async function sairConta() {
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    mmMensagemLogin('Erro ao sair: ' + error.message, true);
+    return;
+  }
+
+  window.mmUsuario = null;
+  window.mmAdmin = false;
+  mmMensagemLogin('Você saiu da sua conta.');
+}
+
+
+async function mmAtualizarSessao(session) {
+  if (!session) {
+    window.mmUsuario = null;
+    window.mmAdmin = false;
+    window.mmNuvemCarregadaPara = null;
+    mmMensagemLogin('Entre na sua conta do Mecânico Mundial.');
+    return;
+  }
+
+  window.mmUsuario = session.user;
+
+  const { data: perfil, error } = await supabaseClient
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    mmMensagemLogin(
+      'Conectado, mas não foi possível consultar o perfil: ' + error.message,
+      true
+    );
+    return;
+  }
+
+  window.mmAdmin = perfil?.role === 'admin';
+
+  mmMensagemLogin(
+    'Conectado: ' + session.user.email +
+    (window.mmAdmin ? ' | Administrador' : ' | Usuário')
+  );
+
+  if (window.mmNuvemCarregadaPara !== session.user.id) {
+    window.mmNuvemCarregadaPara = session.user.id;
+    await mmCarregarDadosNuvem();
+  }
+}
+
+async function mmIniciarAutenticacao() {
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    mmMensagemLogin('Erro ao verificar sessão: ' + error.message, true);
+    return;
+  }
+
+  await mmAtualizarSessao(data.session);
+}
+
+supabaseClient.auth.onAuthStateChange((evento, session) => {
+  setTimeout(() => mmAtualizarSessao(session), 0);
+});
+
+mmIniciarAutenticacao();
+
+// ===== FIM DA AUTENTICAÇÃO =====
  const DBKEY='mecanicoMundialBancoV2', CASEKEY='mecanicoMundialCasosV1';
 const sistemas=['Motor','Freios e válvulas','Suspensão e molas','Transmissão e embreagem','Eixos e diferencial','Direção','Elétrica e eletrônica','Arrefecimento','Combustível e injeção','Admissão e escape','Cabine e carroceria','Hidráulico e implementos','Rodas e cubos','Lubrificação'];
 const modelos=['Mercedes-Benz L1113 L1313 L1513 L1620 Accelo Atego Actros','Scania Série 2 Série 3 93 94 114 124 P G R S','DAF CF XF','Volkswagen Worker Delivery Constellation Meteor'];
@@ -163,7 +316,13 @@ const manuaisBase=[
 {titulo:'Manual digital Volkswagen Caminhões',marca:'Volkswagen Caminhões',tipo:'Portal oficial',url:'https://www.vwco.com.br/manual'}
 ];
 if(!db.manuais.length)db.manuais=manuaisBase;
-function gravar(){db.atualizado=new Date().toISOString();localStorage.setItem(DBKEY,JSON.stringify(db))}
+
+function gravar(){
+  db.atualizado = new Date().toISOString();
+  localStorage.setItem(DBKEY, JSON.stringify(db));
+  mmAgendarSalvamentoNuvem();
+}
+
 gravar();
 let atual='inicio',pilha=[];
 const titulos={inicio:'Central técnica',pecas:'Catálogo de peças',detalhePeca:'Detalhes da peça',cadastroPeca:'Cadastrar peça',diagnostico:'Diagnóstico',sistemas:'Sistemas',sistemaDetalhe:'Sistema',manuais:'Manuais técnicos',banco:'Banco de dados',sobre:'Marcas e modelos',catalogoFluxo:'Catálogo técnico por modelo'};
@@ -272,6 +431,103 @@ if(!db.catalogoVisual)db.catalogoVisual={};db.versao=4;gravar();
 // Diagnóstico com informações separadas em blocos visuais para leitura rápida na oficina.
 renderDiag=function(){let q=norm(document.getElementById('qDiag')?.value||'');let arr=termosDiag.filter(d=>!q||norm(d.t+' '+d.k+' '+d.c+' '+d.x).includes(q));document.getElementById('listaDiag').innerHTML=arr.map(d=>`<article class="diagCard"><h3>${esc(d.t)}</h3><div class="diagBubble cause"><strong>⚠️ CAUSAS POSSÍVEIS</strong><p>${esc(d.c)}</p></div><div class="diagBubble test"><strong>🔎 TESTES RECOMENDADOS</strong><p>${esc(d.x)}</p></div><div class="notice">As causas são hipóteses. Faça os testes e siga os procedimentos de segurança do fabricante.</div></article>`).join('')||'<div class="empty">Não encontrei uma referência inicial para esse sintoma. Registre o caso e consulte a documentação técnica do veículo.</div>'};
 renderDiag();
+
+ // ===== SINCRONIZAÇÃO COM A NUVEM =====
+
+let mmNuvemTimer = null;
+let mmSalvamentoEmAndamento = false;
+let mmSalvamentoPendente = false;
+
+async function mmCarregarDadosNuvem() {
+  if (!window.mmUsuario) return;
+
+  mmMensagemLogin('Buscando dados na nuvem...');
+
+  const { data, error } = await supabaseClient
+    .from('app_state')
+    .select('data')
+    .eq('id', 'principal')
+    .maybeSingle();
+
+  if (error) {
+    mmMensagemLogin('Erro ao carregar dados: ' + error.message, true);
+    return;
+  }
+
+  if (data && data.data) {
+    if (data.data.db) {
+      db = data.data.db;
+      localStorage.setItem(DBKEY, JSON.stringify(db));
+    }
+
+    if (Array.isArray(data.data.casos)) {
+      casos = data.data.casos;
+      localStorage.setItem(CASEKEY, JSON.stringify(casos));
+     mmAgendarSalvamentoNuvem();
+   
+
+    renderPecas();
+    renderSistemas();
+    renderManuais();
+    renderHistorico();
+    renderBanco();
+
+    mmMensagemLogin('Dados carregados da nuvem.');
+    return;
+  }
+
+  if (window.mmAdmin) {
+    await mmSalvarDadosNuvem();
+    mmMensagemLogin('Banco inicial enviado para a nuvem.');
+  } else {
+    mmMensagemLogin('Acesso aos dados não liberado. Verifique sua assinatura.', true);
+  }
+}
+
+function mmAgendarSalvamentoNuvem() {
+  if (!window.mmUsuario || !window.mmAdmin) return;
+
+  clearTimeout(mmNuvemTimer);
+
+  mmNuvemTimer = setTimeout(() => {
+    mmSalvarDadosNuvem();
+  }, 1000);
+}
+
+async function mmSalvarDadosNuvem() {
+  if (!window.mmUsuario || !window.mmAdmin) return;
+
+  if (mmSalvamentoEmAndamento) {
+    mmSalvamentoPendente = true;
+    return;
+  }
+
+  mmSalvamentoEmAndamento = true;
+
+  const { error } = await supabaseClient
+    .from('app_state')
+    .upsert({
+      id: 'principal',
+      data: { db: db, casos: casos },
+      updated_at: new Date().toISOString(),
+      updated_by: window.mmUsuario.id
+    });
+
+  mmSalvamentoEmAndamento = false;
+
+  if (error) {
+    mmMensagemLogin('Erro ao salvar na nuvem: ' + error.message, true);
+  } else {
+    mmMensagemLogin('Dados sincronizados com a nuvem.');
+  }
+
+  if (mmSalvamentoPendente) {
+    mmSalvamentoPendente = false;
+    mmAgendarSalvamentoNuvem();
+  }
+}
+
+// ===== FIM DA SINCRONIZAÇÃO =====
 
 </script>
 </body>
