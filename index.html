@@ -124,7 +124,7 @@ a<section class="screen" id="sobre"><div class="eyebrow">Cobertura</div><h1>Marc
 const SUPABASE_URL = 'https://bqsivstephmugnepmflx.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_fWHJMP79qYGhb852tEfsTQ_oHiioI5d';
 
-const supabaseClient = window.supabase.createClient(
+window.supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
@@ -132,7 +132,7 @@ const supabaseClient = window.supabase.createClient(
  
  <script>
   // ===== AUTENTICAÇÃO MECÂNICO MUNDIAL =====
-
+const supabaseClient = window.supabaseClient;
 window.mmUsuario = null;
 window.mmAdmin = false;
 
