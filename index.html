@@ -217,10 +217,15 @@ async function sairConta() {
 
 
 async function mmAtualizarSessao(session) {
+  const painelLogin = document.getElementById('loginBox');
+
   if (!session) {
     window.mmUsuario = null;
     window.mmAdmin = false;
     window.mmNuvemCarregadaPara = null;
+
+    if (painelLogin) painelLogin.style.display = 'block';
+
     mmMensagemLogin('Entre na sua conta do Mecânico Mundial.');
     return;
   }
@@ -234,8 +239,9 @@ async function mmAtualizarSessao(session) {
     .maybeSingle();
 
   if (error) {
+    if (painelLogin) painelLogin.style.display = 'block';
     mmMensagemLogin(
-      'Conectado, mas não foi possível consultar o perfil: ' + error.message,
+      'Erro ao consultar perfil: ' + error.message,
       true
     );
     return;
@@ -248,11 +254,14 @@ async function mmAtualizarSessao(session) {
     (window.mmAdmin ? ' | Administrador' : ' | Usuário')
   );
 
+  if (painelLogin) painelLogin.style.display = 'none';
+
   if (window.mmNuvemCarregadaPara !== session.user.id) {
     window.mmNuvemCarregadaPara = session.user.id;
     await mmCarregarDadosNuvem();
   }
 }
+
 
 async function mmIniciarAutenticacao() {
   const { data, error } = await supabaseClient.auth.getSession();
